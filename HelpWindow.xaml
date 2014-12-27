@@ -1,0 +1,50 @@
+﻿<Window x:Class="CalMat.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HelpWindow" Height="300" Width="300" Background="#FF2C2C2C" MinWidth="300" MinHeight="300">
+    <Grid Background="#002C2C2C">
+        <TabControl Margin="-2,0,0,0">
+            <TabItem Header="Général" >
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock
+                		Margin="0,10,0,0"
+                		TextWrapping="Wrap"
+			       ><Run Text="Bienvenu dans le programme CalMat!"/><LineBreak/><Run/><LineBreak/><Run Text="Ce programme est une Calculatrice Matriciel developpé comme projet pour le cours de NF05 de l'Université de Technologie de Troyes (UTT)."/><LineBreak/><Run/><LineBreak/><Run Text="Vous avez la possibiliter de sauvegarder votre feuille de calcul avec le boutons &quot;Sauvegarder&quot; situé dans &quot;Fichier&quot;"/><LineBreak/><Run Text="De même pour ouvrir un fichier enregistré."/><Run Text=" "/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Création">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock
+                		Margin="0,10,0,0"
+                		TextWrapping="Wrap"
+			       ><Run Text="Pour créer un matrice, taper "/><LineBreak/><Run FontWeight="Bold" Text="-&quot;nom matrice&quot; = [&quot;nb colonnes&quot; , &quot;nb lignes&quot; ]"/><LineBreak/><Run Text="Exemple:" TextDecorations="Underline"/><Run Text=" A=[2,3]"/><LineBreak/><Run/><LineBreak/><Run Text="Une fenêtre apparaitra avec un tableau de dimension demandé. Taper les valeurs dans chaque case et cliquer sur le bouton &quot;OK&quot; pour valider. "/><LineBreak/><Run/><LineBreak/><Run FontWeight="Bold" Text="Tips and tricks:" TextDecorations="Underline"/><LineBreak/><Run Text="-déplacez vous avec &quot;TAB&quot; pour aller plus vite."/><LineBreak/><Run Text="-Une case vide sera égale a 0."/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Calcul">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock
+                		Margin="0,10,0,0"
+                		TextWrapping="Wrap"
+			       ><Run Text="Pour les calculs, simplement écrire les nom des matrices avec l'operateur entre:"/><LineBreak/><Run Text="-Addition : +"/><LineBreak/><Run Text="-Soustraction : -"/><LineBreak/><Run Text="-Multiplication : *"/><LineBreak/><Run/><LineBreak/><Run Text="Pas besoin de se soucier si les deux matrice sont de dimensions compatible, le programme le fait tout seul."/><Run Text=" Le résultat sera juste affiché."/><LineBreak/><Run/><LineBreak/><Run FontWeight="Bold" Text=" Exemple : " TextDecorations="Underline"/><Run Text=" "/><LineBreak/><Run Text="A+B; A*B, B-A."/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Assignation">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock
+                		Margin="0,10,0,0"
+                		TextWrapping="Wrap"
+			       ><Run Text="Le programme peu"/><Run Text="t"/><Run Text=" aussi directement créer une matrice avec un calcul."/><Run Text=" Devant le calcul, écrivez le nom de la matrice avec  &quot;=&quot; après."/><LineBreak/><Run/><LineBreak/><Run Text="La matrice créée sera de bonne dimension."/><LineBreak/><Run/><LineBreak/><Run FontWeight="Bold" Text="Exemple :" TextDecorations="Underline"/><LineBreak/><Run Text="A=B*C."/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="méthode">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock
+                		Margin="0,10,0,0"
+                		TextWrapping="Wrap"
+			       ><Run Text="Methode lié"/><Run Text="e"/><Run Text=" "/><Run Text="à"/><Run Text=" toute les matrices:"/><LineBreak/><Run FontWeight="Bold" Text="-"/><Run FontWeight="Bold" Text="Transposé:" TextDecorations="Underline"/><Run Text=" Trans(A) ou B=Trans(A)"/><LineBreak/><Run FontWeight="Bold" Text="-Afficher la matrice" TextDecorations="Underline"/><Run FontWeight="Bold" Text=":"/><Run Text="  juste taper le nom de la &#x9;&#x9;&#x9;       matrice."/><LineBreak/><LineBreak/><LineBreak/><Run Text="Methodes liées aux matrices carrées:"/><LineBreak/><Run Text="-"/><Run FontWeight="Bold" Text="Déterminant: " TextDecorations="Underline"/><Run Text=" det(A)"/><LineBreak/><Run Text="-"/><Run FontWeight="Bold" Text="Trace" TextDecorations="Underline"/><Run FontWeight="Bold" Text=": " TextDecorations="Underline"/><Run Text="trace(A)"/><LineBreak/><Run Text="-"/><Run FontWeight="Bold" Text="Norme: " TextDecorations="Underline"/><Run Text="norme(A)"/><Run Text=" (norme"/><Run Text=" 1"/><Run Text=" utilisé"/><Run Text="e)"/><Run Text=" "/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run Text="Il est possible de modifier on supprimer une matrice en faisant un clique droit sur la matrice dans la colonne a droite."/></TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
