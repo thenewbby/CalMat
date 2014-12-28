@@ -32,7 +32,7 @@
             <ListBox.ContextMenu>
                 <ContextMenu x:Name="cmitem">
                     <MenuItem Header="Modifier" Click="Modifier"/>
-                    <MenuItem Header="Suprimer" Click="Supprim"/>
+                    <MenuItem Header="Suprimer" Click="Delete"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

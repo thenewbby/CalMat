@@ -104,7 +104,7 @@ namespace CalMat
             {
                 return value * b; // si réussi, appel l'operateur '*' avec double et une matrice
             }
-            throw new Exception("Impossible de convertir '" + a + "' en double dans l'operateur * de matrix.\n"); //sinon retourne une erreur
+            throw new Exception("Impossible de convertir '" + a + "' en double dans l'operateur * de Matrix.\n"); //sinon retourne une erreur
         }
 
         public static Matrix operator *(double a, Matrix b) //operateur '*': defini une méthode de calcul avec l'operateur '*', un double et une matrice
@@ -119,6 +119,32 @@ namespace CalMat
             }
             return c; //retourne la matrice c
         }
+
+        public Matrix Pow( String p) //operateur '^': defini une methode de calcul avec l'operateur '^', un int et une matrice carrée
+        {
+
+            int value;
+
+            if (int.TryParse(p, out value)) //on essaye de convertir "p" en int
+            {
+                if (this.Columns == this.Lines) //on vérifie si la matrice est bien carrée
+                {
+                    Matrix b = this; //on crée une autre matrice "b" égale à "this"
+                    for (int n = 1; n < value; n++)
+                    {
+                        b *= this; //si réussi ,multiplie "c" par "b", "p" fois
+                    }
+                    return b; //retourne b
+                }
+                else
+                {
+                    throw new Exception("La matrice n'est pas carrée"); //si elle passe pas le test "carrée"
+                }
+
+            }
+            throw new Exception("Impossible de convertir '" + p + "' en int dans l'operateur ^ de SquareMatrix.\n"); //si on arrive pas à convertir
+
+        } 
 
         public void Input() //méthode qui appel la fenetre MatrixInput pour initialiser la matrice
         {

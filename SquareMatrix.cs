@@ -24,19 +24,6 @@ namespace CalMat
             this.name     = nom; //pas besoin d'ajouter dans le dico car appele la base
         }
 
-        public new SquareMatrix Trans() //méthode pour faire la tranposée d'une matrice carrée
-        {
-            SquareMatrix T = new SquareMatrix(this.Lines); //crée une matrice carrée de même dimention que la matrice this
-            for (int i = 0; i < this.Lines; i++)
-            {
-                for (int j = 0; j < this.Columns; j++)
-                {
-                    T.Elements[i, j] = this.Elements[j, i]; //on tranpose la matrice this
-                }
-            }
-            return T; //retourne la matrice T de passage
-        }
-
         public static SquareMatrix operator +(SquareMatrix a, SquareMatrix b) //operateur '+': defini une methode de calcul avec l'operateur '+' et deux matrices carrées
         {
             SquareMatrix c = a + b; //crée une matrice carrée avec les valeurs a + b (appel la méthode  "public static Matrix operator +(Matrix a, Matrix b)" dans la classe Matrix
@@ -49,19 +36,18 @@ namespace CalMat
             return c;
         }
 
-
         public static SquareMatrix operator *(SquareMatrix a, SquareMatrix b) //operateur '*': defini une methode de calcul avec l'operateur '*' et deux matrices carrées
         {
             SquareMatrix c = a * b;
             return c; //retoune c
         }
 
-
         public static SquareMatrix operator *(double a, SquareMatrix b) //operateur '*': defini une methode de calcul avec l'operateur '*', un double et une matrice carrée
         {
             SquareMatrix c = a * b;
             return c; //retoune c
         }
+
 
         /*protected int SubMatrix(SquareMatrix a, int x)
         {
@@ -124,7 +110,7 @@ namespace CalMat
                     return det;
                 }
          }
-        */
+        */ //tentative de faire un algoritme récursif pour le determinant
 
 
         /*public int Det ()
@@ -168,15 +154,17 @@ namespace CalMat
                 Console.WriteLine("det");
                 return det;
             }
-        }*/
+        }*/ //tentative de faire un algoritme récursif pour le determinant
 
-        public Object Det()
+        public Object Det() //methode de calcul pour calculer le déterminant (principe: triangulation de la matrice par pivot de gausse)
         {
-            int Max;
-            double k, det = 1;
-            SquareMatrix c = this;
-            double[,] Array = new double[this.Columns, 1];
+            //création des variables
+            int Max; 
+            double k, det = 1; 
+            SquareMatrix c = this; 
+            double[] Array = new double[this.Columns]; 
 
+            //on cherche le maximum de la colonne j et en dessous de la jiem ligne incluse
             for (int j = 0; j < this.Columns; j++)
             {
                 Max = j;
@@ -187,9 +175,10 @@ namespace CalMat
                         Max = j;
                     }
                 }
+                // on interverti la ligne j et la ligne contenant le maximum trouvé
                 for (int x = 0; x < this.Columns; x++)
                 {
-                    Array [x,0] = c.Elements[x,j];
+                    Array [x] = c.Elements[x,j];
                 }
                 for (int x = 0; x < this.Columns; x++)
                 {
@@ -197,9 +186,9 @@ namespace CalMat
                 }
                 for (int x = 0; x < this.Columns; x++)
                 {
-                    c.Elements[x, j] = Array[x, 0];
+                    c.Elements[x, j] = Array[x];
                 }
-                
+                // on trouve le coeficient pour mettre les termes en dessous du terme [j,j] à 0
                 for (int i = j+1; i <c.Lines; i++ )
                 {
                     k = c.Elements[j,i] / c.Elements[j,j];
@@ -211,26 +200,26 @@ namespace CalMat
                 }
 
             }
-
+            // calcul du determinant: le produit des termes diagonaux
             for (int x = 0; x < c.Lines; x++ )
             {
                 det *= c.Elements[x, x];
             }
-            return  det;
+            return  det; //retourne le déterminant trouvé
         }
 
-        public Object Trace()
+        public Object Trace() //methode de calcul pour calculer la trace d'une matrice carrée
         {
             double Trac = 0;
-
+            //on somme les termes diagonaux de la matrice
             for (int i = 0; i < this.Lines; i++)
             {
                 Trac += this.Elements[i, i];
             }
-            return Trac ;
+            return Trac ; //retourne la trace trouvée
         }
         
-        public Object Norme()
+        public Object Norme() //une methode de calcul parmis d'autre pour trouver la norme (norme utilisée : Norme infini)
         {
 
             double sum = 0;
@@ -238,21 +227,22 @@ namespace CalMat
 
             SquareMatrix N = this;
 
+            // on somme la valeur absolue tout les termes de la colonne 
             for (int j = 0 ; j < this.Columns; j++)
             {
                 sum = 0;
                 for (int i = 0 ; i < this .Lines; i++)
                 {
-                    sum += Math.Abs( N.Elements[j,i]); // norme 1
+                    sum += Math.Abs( N.Elements[j,i]);
                 }
+                // on prend le maximum
                 if ( max < sum)
                 {
                     max = sum;
                 }
             }
-            return max;
+            return max; //on retourne le maximum qui est la norme infini
         }
-
     }            
 }
 

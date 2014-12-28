@@ -19,9 +19,9 @@ namespace CalMat
     /// </summary>
     public partial class HelpWindow : Window
     {
-        public HelpWindow()
+        public HelpWindow() 
         {
-            InitializeComponent();
+            InitializeComponent(); //on affiche la HelpWindow
         }
     }
 }

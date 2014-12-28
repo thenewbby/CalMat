@@ -9,7 +9,7 @@
                     <TextBlock
                 		Margin="0,10,0,0"
                 		TextWrapping="Wrap"
-			       ><Run Text="Bienvenu dans le programme CalMat!"/><LineBreak/><Run/><LineBreak/><Run Text="Ce programme est une Calculatrice Matriciel developpé comme projet pour le cours de NF05 de l'Université de Technologie de Troyes (UTT)."/><LineBreak/><Run/><LineBreak/><Run Text="Vous avez la possibiliter de sauvegarder votre feuille de calcul avec le boutons &quot;Sauvegarder&quot; situé dans &quot;Fichier&quot;"/><LineBreak/><Run Text="De même pour ouvrir un fichier enregistré."/><Run Text=" "/></TextBlock>
+			       ><Run Text="Bienvenu dans le programme CalMat!"/><LineBreak/><Run/><LineBreak/><Run Text="Ce programme est une Calculatrice Matriciel developpé comme projet pour le cours de NF05 de l'Université de Technologie de Troyes (UTT)."/><LineBreak/><Run/><LineBreak/><Run Text="Vous avez la possibiliter de sauvegarder votre feuille de calcul avec le boutons &quot;Sauvegarder&quot; situé dans &quot;Fichier&quot;"/><LineBreak/><Run Text="De même pour ouvrir un fichier enregistré."/><Run Text=" "/><LineBreak/><Run/><LineBreak/><Run Text="Pour quiter, sois fermer toutes les fenêtre ou écrivez &quot;exit&quot;."/></TextBlock>
                 </Grid>
             </TabItem>
             <TabItem Header="Création">
@@ -25,7 +25,7 @@
                     <TextBlock
                 		Margin="0,10,0,0"
                 		TextWrapping="Wrap"
-			       ><Run Text="Pour les calculs, simplement écrire les nom des matrices avec l'operateur entre:"/><LineBreak/><Run Text="-Addition : +"/><LineBreak/><Run Text="-Soustraction : -"/><LineBreak/><Run Text="-Multiplication : *"/><LineBreak/><Run/><LineBreak/><Run Text="Pas besoin de se soucier si les deux matrice sont de dimensions compatible, le programme le fait tout seul."/><Run Text=" Le résultat sera juste affiché."/><LineBreak/><Run/><LineBreak/><Run FontWeight="Bold" Text=" Exemple : " TextDecorations="Underline"/><Run Text=" "/><LineBreak/><Run Text="A+B; A*B, B-A."/></TextBlock>
+			       ><Run Text="Pour les calculs, simplement écrire les nom des matrices avec l'operateur entre:"/><LineBreak/><Run Text="-Addition : +"/><LineBreak/><Run Text="-Soustraction : -"/><LineBreak/><Run Text="-Multiplication : *"/><LineBreak/><Run Text="-Puissance : ^ (ne prend que des entiers en puissance)"/><LineBreak/><Run/><LineBreak/><Run Text="Pas besoin de se soucier si les deux matrice sont de dimensions compatible, le programme le fait tout seul."/><Run Text=" Le résultat sera juste affiché."/><LineBreak/><Run/><LineBreak/><Run FontWeight="Bold" Text=" Exemple : " TextDecorations="Underline"/><Run Text=" "/><LineBreak/><Run Text="A+B; A*B, B-A"/><Run Text=", A^2"/></TextBlock>
                 </Grid>
             </TabItem>
             <TabItem Header="Assignation">

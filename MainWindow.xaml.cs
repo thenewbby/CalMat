@@ -12,10 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml.Serialization;
+//using System.Xml.Serialization;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml;
+//using System.Xml.Linq;
+//using System.Xml;
 using System.Runtime.Serialization.Formatters.Binary;
 
 
@@ -32,64 +32,90 @@ namespace CalMat
             CalMat.Calculatrice.mainWindow = this;
         }
 
-        public void Refresh()
+        public void AddMatrix() //methode pour ajouter les matrices sur la colonne de droite (ListBox_display) 
         {
-            foreach (KeyValuePair<String, Matrix> matrice in CalMat.Calculatrice.listMatrix)
+            foreach (KeyValuePair<String, Matrix> matrice in CalMat.Calculatrice.listMatrix) //pour toutes les matrices enregistrées dans le dictionnaire
             {
-                if (!ListBox_display.Items.Contains(matrice))
+                if (!ListBox_display.Items.Contains(matrice)) //si elle ne n'est pas déjà affichée
                 {
-                    ListBox_display.Items.Add(matrice);
+                    ListBox_display.Items.Add(matrice); //on l'ajoute
                 }
             }
+        }
+
+        public void CalculProcess () //method pour controler l'affichage des resultats
+        {
+            string error = null;
+            TxtBox_console.AppendText(">> " + this.TxtBox_command.Text + "\n"); // on ajoute ">>" et la commande entrer par l'utilisateur à la console (TxtBox_console)
+            string result = UserInput.parse(TxtBox_command.Text, ref error); //on parse la commande et on passe comme reference (pointer) la variable error
+            if (error != null) 
+            {
+                TxtBox_console.AppendText(result); //si il y a une erreur, on affiche l'erreur
+            }
+            else
+            {
+                TxtBox_console.AppendText(result); //si il n'y a pas d'erreur, on affiche le resultat
+                TxtBox_command.Clear(); // et on enleve la commande de la barre d'ecriture
+            }  
+            AddMatrix(); // on regarde si il 'y a pas de matrice à afficher en plus
+            TxtBox_console.ScrollToEnd(); // on met la vue sur la dernière commande et resultat
+        }
+
+       
+        #region "Event" 
+        private void file_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // événement quand on clique sur le bouton "Fichier"
+        {
+            ContextMenu cm = this.FindResource("file") as ContextMenu; // on charge le menu
+            cm.IsOpen = true; //on ouvre le menu
         }
 
         public void Open(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = "Calcul"; // Default file name
-            dlg.DefaultExt = ".dat"; // Default file extension
-            dlg.Filter = "data documents (.dat)|*.dat"; // Filter files by extension
+            dlg.FileName = "Calcul"; // nom su fichier par default
+            dlg.DefaultExt = ".dat"; // extension du fichier par default
+            dlg.Filter = "data documents (.dat)|*.dat"; // filtre par default
 
-            // Show save file dialog box
+            // affiche la fenêtre
             Nullable<bool> result = dlg.ShowDialog();
 
-            // Process save file dialog box results
+            // quand on accepte
             if (result == true)
             {
 
                 try
                 {
                     string filename = dlg.FileName;
-                    BinaryFormatter binary = new BinaryFormatter();
-                    FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    while (file.Position != file.Length)
+                    BinaryFormatter binary = new BinaryFormatter(); //création d'un nouveau format binaire
+                    FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read); // on ouvre le fichier
+                    while (file.Position != file.Length) //tant que on est pas à la fin du fichier
                     {
-                        var obj = (KeyValuePair<String,Matrix>) binary.Deserialize(file);
-                        CalMat.Calculatrice.listMatrix.Add(obj.Value.name, obj.Value);
+                        var obj = (KeyValuePair<String, Matrix>)binary.Deserialize(file); //on charge la matrice
+                        CalMat.Calculatrice.listMatrix.Add(obj.Value.name, obj.Value); //et on l'ajoute au dictionnaire
                     }
 
-                    TxtBox_console.AppendText("fichier bien ouvert");
-                    Refresh();
-                    
+                    TxtBox_console.AppendText("Fichier bien ouvert"); //confimation de l'ouverture
+                    AddMatrix(); //on affiche les matrices
+
                 }
                 catch (Exception l)
                 {
-                    TxtBox_console.AppendText("Fichier non ouvert. erreur : " + l.Message + "\n");
+                    TxtBox_console.AppendText("Fichier non ouvert. erreur : " + l.Message + "\n"); // si il y a un problème, on l'affiche
                 }
             }
-        }
+        } // événement quand on clique sur le bouton "Ouvrir"
 
         public void Save(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = "Calcul"; // Default file name
-            dlg.DefaultExt = ".dat"; // Default file extension
-            dlg.Filter = "data documents (.dat)|*.dat"; // Filter files by extension
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog(); //on crée une nouvelle fenêtre de sauvegarde
+            dlg.FileName = "Calcul"; // nom su fichier par default
+            dlg.DefaultExt = ".dat"; // extension du fichier par default
+            dlg.Filter = "data documents (.dat)|*.dat"; // filtre par default
 
-            // Show save file dialog box
+            // affiche la fenêtre
             Nullable<bool> result = dlg.ShowDialog();
 
-            // Process save file dialog box results
+            // quand on accepte
             if (result == true)
             {
                 try
@@ -97,7 +123,7 @@ namespace CalMat
                     string fileName = dlg.FileName;
 
                     #region "xml stackoverflow"
-                    Stream fs = new FileStream(fileName,FileMode.Create);
+                    /*Stream fs = new FileStream(fileName,FileMode.Create);
                     XmlDictionaryWriter xml = XmlDictionaryWriter.CreateTextWriter(fs);
                     using (XmlDictionaryWriter writer =
                     XmlDictionaryWriter.CreateTextWriter(fs))
@@ -108,103 +134,66 @@ namespace CalMat
                         x.Serialize(writer, matrice);
                         //xml.WriteEndElement();
                     }
-                    fs.Close();
+                    fs.Close();*/
                     #endregion
 
-                    #region "binary" //marche  
-
-
-                    /*BinaryFormatter binaryFormat = new BinaryFormatter();
-                    FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                    BinaryFormatter binaryFormat = new BinaryFormatter(); //on crée un nouveau format binaire
+                    FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write); //on crée le fichier
                     foreach (KeyValuePair<String, Matrix> matrice in CalMat.Calculatrice.listMatrix)
                     {
-                        binaryFormat.Serialize(file, matrice);
+                        binaryFormat.Serialize(file, matrice); // pour chaque matrice, on l'enregistre dans le fichier
                     }
-                    file.Close();*/
-                    #endregion
-                    TxtBox_console.AppendText("Fichier enregistre\n");
+                    file.Close(); // on ferme le fichier
+
+                    TxtBox_console.AppendText("Fichier enregistre\n"); // confirmation de la sauvegarde
                 }
 
-                catch(Exception l)
+                catch (Exception l)
                 {
-                    TxtBox_console.AppendText("Fichier non enregistre. erreur : " + l.Message + "\n" );
+                    TxtBox_console.AppendText("Fichier non enregistre. erreur : " + l.Message + "\n"); // si il y a un problème, on l'affiche
                 }
-               
+
             }
-           /* using (FileStream fileStream = new FileStream("test.binary", FileMode.Create))
-            {
-                IFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                bf.Serialize(fileStream, CalMat.Calculatrice.listMatrix);
-            }*/
-        }
+        } // événement quand on clique sur le bouton "Enregistrer"
 
-        public void Help(object sender, RoutedEventArgs e)
+        public void Help(object sender, RoutedEventArgs e) // événement quand on clique sur le bouton "Help"
         {
-            HelpWindow helpWindow = new HelpWindow();
-            helpWindow.Show();
+            HelpWindow helpWindow = new HelpWindow(); //on crée une nouvelle page HelpWindow
+            helpWindow.Show(); //on affiche la fenêtre
         }
 
-        public void CalculProcess ()
-        {
-            //TxtBox_console.Text += ">>> " + this.TxtBox_command.Text + "\n";
-            TxtBox_console.AppendText(">> " + this.TxtBox_command.Text + "\n");
-            string error = null;
-            String result = UserInput.parse(TxtBox_command.Text, ref error);
-            if (error != null)
-            {
-                //TxtBox_console.Text += result ;
-                TxtBox_console.AppendText(result);
-            }
-            else
-            {
-                //TxtBox_console.Text += result ;
-                TxtBox_console.AppendText(result);
-                TxtBox_command.Clear();
-            }  
-            Refresh();
-            TxtBox_console.ScrollToEnd();
-        }
-
-       
-        #region "Event" 
-
-        private void TxtBox_command_GotFocus(object sender, RoutedEventArgs e)
+        private void TxtBox_command_GotFocus(object sender, RoutedEventArgs e) // événement quand la ligne d'écriture est sélectionné
         {
             if (this.TxtBox_command.Text == "Entrez votre calcul")
             {
-                this.TxtBox_command.Text = "";
+                this.TxtBox_command.Text = ""; // on retire l'écriture par default
             }
         }
 
-        private void Btn_calculus_Click(object sender, RoutedEventArgs e)
+        private void Btn_calculus_Click(object sender, RoutedEventArgs e) // événement pour parser la commande écrite en appuyant sur le bouton "Executer"
         {
-            CalculProcess();
+            CalculProcess(); //on parse la commande
         }
 
-        private void ListBox_display_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ListBox_display_MouseDown(object sender, MouseButtonEventArgs e) // événement quand on clique sur rien
         {
-           ListBox_display.UnselectAll();
+           ListBox_display.UnselectAll(); // on désélectionne tout
         }
 
-        private void ListBox_display_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void ListBox_display_MouseRightButtonDown(object sender, MouseButtonEventArgs e) // événement quand on fait un clique droit sur une matrice
         {
             try
             {
-                ContextMenu cm = this.FindResource("cmitem") as ContextMenu;
-                cm.IsOpen = true;
+                ContextMenu cm = this.FindResource("cmitem") as ContextMenu; //on charge le menu
+                cm.IsOpen = true; // on ouvre le menu
             }
             catch(Exception)
             {
                 
             }
-        } 
-        private void file_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ContextMenu cm = this.FindResource("file") as ContextMenu;
-            cm.IsOpen = true;
         }
-           
-        private void TxtBox_command_KeyDown(object sender, KeyEventArgs e)
+
+        private void TxtBox_command_KeyDown(object sender, KeyEventArgs e) // événement pour parser la commande écrite en appuyant sur ENTRER
         {
            if( e.Key == Key.Enter)
            {
@@ -212,32 +201,31 @@ namespace CalMat
            }
         }
 
-        public void Modifier(object sender, RoutedEventArgs e)
+        public void Modifier(object sender, RoutedEventArgs e) //événement pour modifier la matrice sélctionnée 
         {
             try
             {
-                Matrix m = ((KeyValuePair<String, Matrix>)ListBox_display.Items.GetItemAt(ListBox_display.SelectedIndex)).Value;
-                MatrixInput MatrixInput = new MatrixInput(m, true);
-                MatrixInput.Show();
+                Matrix m = ((KeyValuePair<String, Matrix>)ListBox_display.Items.GetItemAt(ListBox_display.SelectedIndex)).Value; // on récupère la matrice sélectionnée
+                MatrixInput MatrixInput = new MatrixInput(m, true); // on crée la page pour modifier en chargeant les valeurs de la matrice.
+                MatrixInput.Show(); // on affiche la fenêtre
             }
             catch(Exception)
             {
-
+                TxtBox_console.AppendText("La matrice n'a pas peu etre modifiee\n"); // si il y a un problème, on afffiche une erreur
             }
-
         }
 
-        public void Supprim(object sender, RoutedEventArgs e)
+        public void Delete(object sender, RoutedEventArgs e) //événement pour supprimer la matrice séléctionnée 
         {
             try
             {
-            Matrix m = ((KeyValuePair<String,Matrix>) ListBox_display.Items.GetItemAt(ListBox_display.SelectedIndex)).Value;
-            CalMat.Calculatrice.listMatrix.Remove(m.name);
-            ListBox_display.Items.RemoveAt(ListBox_display.SelectedIndex);
+            Matrix m = ((KeyValuePair<String,Matrix>) ListBox_display.Items.GetItemAt(ListBox_display.SelectedIndex)).Value; // on récupère la matrice sélectionnée
+            CalMat.Calculatrice.listMatrix.Remove(m.name); // on la supprime du dictionnaire
+            ListBox_display.Items.RemoveAt(ListBox_display.SelectedIndex); // on la supprime de l'affichage
             }
             catch(Exception)
             {
-
+                TxtBox_console.AppendText("La matrice n'a pas peu etre suprimee\n"); // si il y a un problème, on afffiche une erreur
             }
             
             
