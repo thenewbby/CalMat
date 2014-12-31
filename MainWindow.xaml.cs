@@ -26,6 +26,26 @@ namespace CalMat
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        /*public struct CustomKeyValuePair<T1, T2>
+        {
+            public CustomKeyValuePair(T1 key, T2 value)
+                : this()
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public T1 Key { get; set; }
+            public T2 Value { get; set; }
+
+            // here I specify how is the cast
+            public static explicit operator CustomKeyValuePair<T1, T2>(KeyValuePair<T1, T2> keyValuePair)
+            {
+                return new CustomKeyValuePair<T1, T2>(keyValuePair.Key, keyValuePair.Value);
+            }
+        }*/
+
         public MainWindow()
         {
             InitializeComponent();
@@ -73,8 +93,8 @@ namespace CalMat
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = "Calcul"; // nom su fichier par default
-            dlg.DefaultExt = ".dat"; // extension du fichier par default
-            dlg.Filter = "data documents (.dat)|*.dat"; // filtre par default
+            dlg.DefaultExt = ".data"; // extension du fichier par default
+            dlg.Filter = "data documents (.data)|*.data"; // filtre par default
 
             // affiche la fenêtre
             Nullable<bool> result = dlg.ShowDialog();
@@ -90,11 +110,36 @@ namespace CalMat
                     FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read); // on ouvre le fichier
                     while (file.Position != file.Length) //tant que on est pas à la fin du fichier
                     {
-                        var obj = (KeyValuePair<String, Matrix>)binary.Deserialize(file); //on charge la matrice
-                        CalMat.Calculatrice.listMatrix.Add(obj.Value.name, obj.Value); //et on l'ajoute au dictionnaire
-                    }
+                        var obj = (KeyValuePair<String, Matrix>)binary.Deserialize(file);//on charge la matrice
+                        if (!CalMat.Calculatrice.listMatrix.ContainsKey(obj.Value.name)) 
+                       {
+                            CalMat.Calculatrice.listMatrix.Add(obj.Value.name, obj.Value); //si elle n'existe pas, on l'ajoute au dictionnaire
+                       }
+                       else
+                        {
+                            CalMat.Calculatrice.listMatrix.Add(obj.Value.name + "_fichier", obj.Value); // si le nom est pris, on change le nom et on l'ajoute
+                        }
 
-                    TxtBox_console.AppendText("Fichier bien ouvert"); //confimation de l'ouverture
+                    }
+                    #region"xml stackoverflow"
+                    /*FileStream fs = new FileStream(filename, FileMode.Open);
+                    XmlSerializer Xml = new XmlSerializer(typeof(CustomKeyValuePair<string, Matrix>[]));
+                    var mat = (CustomKeyValuePair<string, Matrix>[])Xml.Deserialize(fs);
+                    foreach (CustomKeyValuePair<string, Matrix> matrice in mat)
+                    {
+                        if (!CalMat.Calculatrice.listMatrix.ContainsKey(matrice.Value.name))
+                        {
+                            CalMat.Calculatrice.listMatrix.Add(matrice.Value.name, matrice.Value);
+                        }
+                        else
+                        {
+                            CalMat.Calculatrice.listMatrix.Add(matrice.Value.name + "_fichier", matrice.Value);
+                        }
+                        
+                    }*/
+                    #endregion
+
+                    TxtBox_console.AppendText("Fichier bien ouvert \n"); //confimation de l'ouverture
                     AddMatrix(); //on affiche les matrices
 
                 }
@@ -109,8 +154,8 @@ namespace CalMat
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog(); //on crée une nouvelle fenêtre de sauvegarde
             dlg.FileName = "Calcul"; // nom su fichier par default
-            dlg.DefaultExt = ".dat"; // extension du fichier par default
-            dlg.Filter = "data documents (.dat)|*.dat"; // filtre par default
+            dlg.DefaultExt = ".data"; // extension du fichier par default
+            dlg.Filter = "data documents (.data)|*.data"; // filtre par default
 
             // affiche la fenêtre
             Nullable<bool> result = dlg.ShowDialog();
@@ -124,16 +169,9 @@ namespace CalMat
 
                     #region "xml stackoverflow"
                     /*Stream fs = new FileStream(fileName,FileMode.Create);
-                    XmlDictionaryWriter xml = XmlDictionaryWriter.CreateTextWriter(fs);
-                    using (XmlDictionaryWriter writer =
-                    XmlDictionaryWriter.CreateTextWriter(fs))
-
-                    foreach (KeyValuePair<String, Matrix> matrice in CalMat.Calculatrice.listMatrix)
-                    {
-                        XmlSerializer x = new XmlSerializer(matrice.GetType());
-                        x.Serialize(writer, matrice);
-                        //xml.WriteEndElement();
-                    }
+                    XmlSerializer Xml = new XmlSerializer(typeof(CustomKeyValuePair<string,Matrix>[]));
+                    var aux = CalMat.Calculatrice.listMatrix.Select(keyValuePair => (CustomKeyValuePair<string, Matrix>)keyValuePair).ToArray();
+                    Xml.Serialize(fs, aux);
                     fs.Close();*/
                     #endregion
 
