@@ -9,43 +9,12 @@ namespace CalMat
     [Serializable]
     class SquareMatrix : Matrix //defini une classe SquareMatrix qui hérite de la classe Matrix
     {
-        public SquareMatrix(int c) : base(c, c) //constructeur de la classe SquareMatrix pour les matrices carrée "de passage" 
-        {
-            this.Elements = new double[c, c];
-            this.Lines    = c;
-            this.Columns  = c;
-        }
-
-        public SquareMatrix(int c, string  nom) : base(c,c,nom) //constructeur de la classe SquareMatrix pour les matrices carrée "de passage"
+        public SquareMatrix(int c, string  nom) : base(c,c,nom) //constructeur de la classe SquareMatrix pour les matrices carrées "principal"
         {
             this.Elements = new double[c, c];
             this.Lines    = c;
             this.Columns  = c;
             this.name     = nom; //pas besoin d'ajouter dans le dico car appele la base
-        }
-
-        public static SquareMatrix operator +(SquareMatrix a, SquareMatrix b) //operateur '+': defini une methode de calcul avec l'operateur '+' et deux matrices carrées
-        {
-            SquareMatrix c = a + b; //crée une matrice carrée avec les valeurs a + b (appel la méthode  "public static Matrix operator +(Matrix a, Matrix b)" dans la classe Matrix
-            return c; //retoune c
-        }
-
-        public static SquareMatrix operator -(SquareMatrix a, SquareMatrix b) //operateur '-': defini une methode de calcul avec l'operateur '-' et deux matrices carrées
-        {
-            SquareMatrix c = a - b; //crée une matrice carrée avec les valeurs a - b (appel la méthode  "public static Matrix operator -(Matrix a, Matrix b)" dans la classe Matrix
-            return c;
-        }
-
-        public static SquareMatrix operator *(SquareMatrix a, SquareMatrix b) //operateur '*': defini une methode de calcul avec l'operateur '*' et deux matrices carrées
-        {
-            SquareMatrix c = a * b;
-            return c; //retoune c
-        }
-
-        public static SquareMatrix operator *(double a, SquareMatrix b) //operateur '*': defini une methode de calcul avec l'operateur '*', un double et une matrice carrée
-        {
-            SquareMatrix c = a * b;
-            return c; //retoune c
         }
 
 
@@ -219,7 +188,7 @@ namespace CalMat
             return Trac ; //retourne la trace trouvée
         }
         
-        public Object Norme() //une methode de calcul parmis d'autre pour trouver la norme (norme utilisée : Norme infini)
+        public Object Norme() //une methode de calcul parmis d'autre pour trouver la norme (norme utilisée : Norme infinie)
         {
 
             double sum = 0;

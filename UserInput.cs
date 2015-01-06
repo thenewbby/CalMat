@@ -12,7 +12,7 @@ namespace CalMat
     {
          // defini des modeles de commande
          private static Regex cal_rgx           = new Regex(@"^(\w+)\=(\w)([\+\-\*])(\w)$"); // A=B+C
-         private static Regex init_rgx         = new Regex(@"^(\w+)\=\[(\w+),(\w+)\]$"); //A=[2,2]
+         private static Regex init_rgx          = new Regex(@"^(\w+)\=\[(\w+),(\w+)\]$"); //A=[2,2]
          private static Regex showCal_rgx       = new Regex(@"^(\w+)([\+\-\*])(\w+)$"); //A*B
          private static Regex exit_rgx          = new Regex(@"(exit)"); //exit
          private static Regex meth_rgx          = new Regex(@"^(\w+)\((\w)\)$"); // trans(A)
@@ -35,7 +35,7 @@ namespace CalMat
              }
          }
 
-         public static String AssignCalcul () // méthode pour affecter une valeur venant d'un calcul matriciel à une autre matrice
+         public static String AssigneCalcul () // méthode pour affecter une valeur venant d'un calcul matriciel à une autre matrice
          {
              //defini les paramètres donnés par l'utilisateur
              string operateur        = matches[0].Groups[3].ToString();
@@ -194,7 +194,8 @@ namespace CalMat
              //defini les paramètres donnés par l'utilisateur
              string method = matches[0].Groups[1].ToString();
              string matrix = matches[0].Groups[2].ToString();
-             if (Calculatrice.listMatrix.ContainsKey(matrix))
+
+             if (Calculatrice.listMatrix.ContainsKey(matrix)) // on verifie que la matrice existe
              {
                  switch (method)
                  {
@@ -251,14 +252,7 @@ namespace CalMat
                  {
                      if (!Calculatrice.listMatrix.ContainsKey(Mtrx_assign_name)) // si la matrice d'assignation n'existe pas 
                      {
-                         if (Calculatrice.listMatrix[matrix].Lines == Calculatrice.listMatrix[matrix].Columns) //si la matrice de droite est carrée
-                         {
-                             SquareMatrix matrix_assign = new SquareMatrix(Calculatrice.listMatrix[matrix].Lines, Mtrx_assign_name); //on crée une nouvelle matrice carrée de même dimension
-                         }
-                         else
-                         {
-                             Calculatrice.listMatrix.Add(Mtrx_assign_name, null); //sinon on crée une matrice classique
-                         }
+                         Create(matrix, matrix, Mtrx_assign_name);
                      }
                      Calculatrice.listMatrix[Mtrx_assign_name] = Calculatrice.listMatrix[matrix].Trans(); // on donne les valeurs à la matrice de gauche
 
@@ -291,12 +285,17 @@ namespace CalMat
 
             if (Calculatrice.listMatrix.ContainsKey(matrix))
             {
-                return Calculatrice.listMatrix[matrix].Pow(power).ToString(); // si la matrice existe, on retourne la valeur de matrix^power sous forme de string
+                if (Calculatrice.listMatrix[matrix].Columns == Calculatrice.listMatrix[matrix].Lines) //on vérifie si la matrice est bien carrée
+                {
+                    return (Calculatrice.listMatrix[matrix]).Pow(power).ToString(); // si la matrice existe, on retourne la valeur de matrix^power sous forme de string
+                }
+                    throw new Exception("La matrice n'est pas carrée"); //si elle passe pas le test "carrée"
+                
             }
             throw new Exception("La matrice n'existe pas"); // sinon, on affiche l'erreur
          }
 
-         public static String PowerAssigne() // methode pour faire un puissance d'une matrice et affecter la valeur
+         public static String AssignePower() // methode pour faire un puissance d'une matrice et affecter la valeur
          {
              //defini les paramètres donnés par l'utilisateur
              string Mtrx_assign_name = matches[0].Groups[1].ToString();
@@ -304,13 +303,16 @@ namespace CalMat
              string power            = matches[0].Groups[3].ToString();
 
              Create(matrix, matrix, Mtrx_assign_name); //on crée la matrice
-
-             Calculatrice.listMatrix[Mtrx_assign_name] = Calculatrice.listMatrix[matrix].Pow(power); // on iniialise la matrice avec le calcul matrix^power
-             return Calculatrice.listMatrix[Mtrx_assign_name].ToString(); // on retourne la valeur de matrix^power sous forme de string
+             if (Calculatrice.listMatrix[matrix].Columns == Calculatrice.listMatrix[matrix].Lines) //on vérifie si la matrice est bien carrée
+             {
+                 Calculatrice.listMatrix[Mtrx_assign_name] = ((SquareMatrix)Calculatrice.listMatrix[matrix]).Pow(power); // on iniialise la matrice avec le calcul matrix^power
+                 return Calculatrice.listMatrix[Mtrx_assign_name].ToString(); // on retourne la valeur de matrix^power sous forme de string
+             }
+             throw new Exception("La matrice n'est pas carrée"); //si elle passe pas le test "carrée"
 
          }
 
-         public static String parse(string commande, ref string error) // procédure de parsing
+         public static String Parse(string commande, ref string error) // procédure de parsing
          {
              commande = commande.Replace(" ", ""); // on enlève tout les espace
              matches = cal_rgx.Matches(commande); // on regarde si la commande est de la forme A=B+C
@@ -319,7 +321,7 @@ namespace CalMat
              {
                  try
                  {
-                     return AssignCalcul(); //si oui on essaye la méthode AssignCalcul
+                     return AssigneCalcul(); //si oui on essaye la méthode AssignCalcul
                  }
                  catch (Exception e)
                  {
@@ -423,7 +425,7 @@ namespace CalMat
              {
                  try
                  {
-                     return PowerAssigne(); //si oui on essaye la méthode PowerAssigne
+                     return AssignePower(); //si oui on essaye la méthode PowerAssigne
                  }
                  catch (Exception e)
                  {
@@ -440,4 +442,3 @@ namespace CalMat
          }
     }
 }
-

@@ -21,7 +21,7 @@ namespace CalMat
     public partial class MatrixInput : Window
     {
 
-        Matrix Matrice; // on crée une matrice générale pour que toutes les méthodes de la classe puisse y accéder
+        Matrix matrix; // on crée une matrice générale pour que toutes les méthodes de la classe puisse y accéder
         List<TextBox> inputs = new List<TextBox>(); // liste pour les textBox
        
         public MatrixInput(Matrix m, bool load) // création de la fenêtre
@@ -51,7 +51,7 @@ namespace CalMat
             Grid_Tabeau.Margin = new Thickness(20);
             this.Width  = 30 * m.Columns + 40;
             this.Height = 30 * m.Lines + this.Btn_matrix.Height + 70;
-            Matrice = m;
+            matrix = m;
 
 
             if(load) // si on doit modifier les valeurs de la matrice
@@ -66,11 +66,11 @@ namespace CalMat
                         txt.Background = Brushes.Transparent;
                         txt.Foreground = Brushes.White;
                         txt.TextAlignment = TextAlignment.Center;
-                        txt.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+                        txt.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
                         txt.SetValue(Grid.ColumnProperty, c);
                         txt.SetValue(Grid.RowProperty, l);
                         txt.Text = m.Elements[c, l].ToString(); 
-                        txt.PreviewTextInput += txt_PreviewTextInput;
+                        txt.PreviewTextInput += Txt_PreviewTextInput;
                         Grid_Tabeau.Children.Add(txt);
                         inputs.Add(txt);
                     }
@@ -90,7 +90,7 @@ namespace CalMat
                         txt.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
                         txt.SetValue(Grid.ColumnProperty, c);
                         txt.SetValue(Grid.RowProperty, l);
-                        txt.PreviewTextInput += txt_PreviewTextInput;
+                        txt.PreviewTextInput += Txt_PreviewTextInput;
                         Grid_Tabeau.Children.Add(txt);
                         inputs.Add(txt);
                     }
@@ -99,7 +99,8 @@ namespace CalMat
             
         }
 
-        private void txt_PreviewTextInput(object sender, TextCompositionEventArgs e) //événement pour obliger l'utilisateur à écrire des chiffres
+        #region"event"
+        private void Txt_PreviewTextInput(object sender, TextCompositionEventArgs e) //événement pour obliger l'utilisateur à écrire des chiffres
         {
             Regex reg = new Regex("[^0-9,\\.]+");
             e.Handled = reg.IsMatch(e.Text);
@@ -108,17 +109,17 @@ namespace CalMat
         private void Btn_matrix_Click(object sender, RoutedEventArgs e) //évenement quand on clique sur le bouton "OK"
         {
             int j = 0;
-            for (int c = 0 ; c < Matrice.Columns; c++ )
+            for (int c = 0 ; c < matrix.Columns; c++ )
             {
-                for (int l = 0 ; l < Matrice.Lines; l++)
+                for (int l = 0 ; l < matrix.Lines; l++)
                 {
 
-                    double.TryParse(inputs [j].Text, out Matrice.Elements[c, l]); //pour chaque textBox, on les convertis en double et on les place dans la matrice
+                    double.TryParse(inputs [j].Text, out matrix.Elements[c, l]); //pour chaque textBox, on les convertis en double et on les place dans la matrice
                     j++;
                 }
             }
-
-            CalMat.Calculatrice.mainWindow.TxtBox_console.AppendText(Matrice.ToString()); // on affiche la matrice sur la console en guise de confirmation
+            CalMat.Calculatrice.mainWindow.TxtBox_console.AppendText(matrix.name + "=\n");
+            CalMat.Calculatrice.mainWindow.TxtBox_console.AppendText(matrix.ToString()); // on affiche la matrice sur la console en guise de confirmation
             CalMat.Calculatrice.mainWindow.ListBox_display.Items.Refresh(); // on rafraichie l'affichage des matrices
             this.Close(); // on ferme la fenêtre
         }
@@ -127,9 +128,9 @@ namespace CalMat
         {
             foreach (TextBox txt in inputs)
             {
-                txt.FontSize = this.Height / 15;
+                txt.FontSize = this.Height/15 ;
             }
         }
-
+        #endregion
     }
 }

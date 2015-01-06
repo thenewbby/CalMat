@@ -46,10 +46,10 @@ namespace CalMat
             }
         }*/
 
-        public MainWindow()
+        public MainWindow() //constructeur de la fenêtre MainWindow
         {
-            InitializeComponent();
-            CalMat.Calculatrice.mainWindow = this;
+            InitializeComponent(); // on crée les élément defini dans le fichier XAML associé dans a la classe
+            CalMat.Calculatrice.mainWindow = this; // on enregistre le pointeur vers la classe
         }
 
         public void AddMatrix() //methode pour ajouter les matrices sur la colonne de droite (ListBox_display) 
@@ -67,10 +67,10 @@ namespace CalMat
         {
             string error = null;
             TxtBox_console.AppendText(">> " + this.TxtBox_command.Text + "\n"); // on ajoute ">>" et la commande entrer par l'utilisateur à la console (TxtBox_console)
-            string result = UserInput.parse(TxtBox_command.Text, ref error); //on parse la commande et on passe comme reference (pointer) la variable error
+            string result = UserInput.Parse(TxtBox_command.Text, ref error); //on parse la commande et on passe comme reference (pointer) la variable error
             if (error != null) 
             {
-                TxtBox_console.AppendText(result); //si il y a une erreur, on affiche l'erreur
+                TxtBox_console.AppendText(error); //si il y a une erreur, on affiche l'erreur
             }
             else
             {
@@ -83,7 +83,7 @@ namespace CalMat
 
        
         #region "Event" 
-        private void file_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // événement quand on clique sur le bouton "Fichier"
+        private void File_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // événement quand on clique sur le bouton "Fichier"
         {
             ContextMenu cm = this.FindResource("file") as ContextMenu; // on charge le menu
             cm.IsOpen = true; //on ouvre le menu
@@ -208,7 +208,7 @@ namespace CalMat
             }
         }
 
-        private void Btn_calculus_Click(object sender, RoutedEventArgs e) // événement pour parser la commande écrite en appuyant sur le bouton "Executer"
+        private void Btn_calcul_Click(object sender, RoutedEventArgs e) // événement pour parser la commande écrite en appuyant sur le bouton "Executer"
         {
             CalculProcess(); //on parse la commande
         }
@@ -239,7 +239,7 @@ namespace CalMat
            }
         }
 
-        public void Modifier(object sender, RoutedEventArgs e) //événement pour modifier la matrice sélctionnée 
+        public void Modify(object sender, RoutedEventArgs e) //événement pour modifier la matrice sélctionnée 
         {
             try
             {

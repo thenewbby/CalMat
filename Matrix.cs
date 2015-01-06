@@ -6,32 +6,30 @@ using System.Threading.Tasks;
 
 namespace CalMat
 {
-    [Serializable]
+    [Serializable] // pour dire au programme que la classe Matrix et SquareMatrix sont enregistrable
     public class Matrix //defini une classe Matrix qui a comme attribut  
     {
-        public int Lines          { get; set; }//Lines(nb de ligne)
-        public int Columns        { get; set; }//Columns(nb de colomns)
+        public int Lines { get; set; }//Lines(nb de ligne)
+        public int Columns { get; set; }//Columns(nb de colomns)
         public double[,] Elements { get; set; }//un tableau a deux dimensions(la matrice)
-        public string name        { get; set; }//name(le nom de la Matrice)
+        public string name { get; set; }//name(le nom de la Matrice)
 
         public Matrix(int c, int l) //constructeur de la classe Matrix pour les matrices "de passage"
         {
             this.Elements = new double[c, l];
-            this.Lines    = l;
-            this.Columns  = c;
+            this.Lines = l;
+            this.Columns = c;
         }
 
         public Matrix(int c, int l, string nom) //constructeur de la classe Matrix pour les matrices "principales"
         {
             this.Elements = new double[c, l];
-            this.Lines    = l;
-            this.Columns  = c;
-            this.name     = nom;
-            if (!Calculatrice.listMatrix.ContainsKey(this.name)) //on ajoute la matrice dans le dictionaire si elle n'y est pas
-            {
-                Calculatrice.listMatrix.Add(this.name, this);
-            }
-            
+            this.Lines = l;
+            this.Columns = c;
+            this.name = nom;
+            Calculatrice.listMatrix.Add(this.name, this); //on ajoute la matrice dans le dictionaire
+
+
         }
 
         public static Matrix operator +(Matrix a, Matrix b) //operateur '+': defini une methode de calcul avec l'operateur '+' et deux matrices
@@ -120,32 +118,6 @@ namespace CalMat
             return c; //retourne la matrice c
         }
 
-        public Matrix Pow( String p) //operateur '^': defini une methode de calcul avec l'operateur '^', un int et une matrice carrée
-        {
-
-            int value;
-
-            if (int.TryParse(p, out value)) //on essaye de convertir "p" en int
-            {
-                if (this.Columns == this.Lines) //on vérifie si la matrice est bien carrée
-                {
-                    Matrix b = this; //on crée une autre matrice "b" égale à "this"
-                    for (int n = 1; n < value; n++)
-                    {
-                        b *= this; //si réussi ,multiplie "c" par "b", "p" fois
-                    }
-                    return b; //retourne b
-                }
-                else
-                {
-                    throw new Exception("La matrice n'est pas carrée"); //si elle passe pas le test "carrée"
-                }
-
-            }
-            throw new Exception("Impossible de convertir '" + p + "' en int dans l'operateur ^ de SquareMatrix.\n"); //si on arrive pas à convertir
-
-        } 
-
         public void Input() //méthode qui appel la fenetre MatrixInput pour initialiser la matrice
         {
             MatrixInput MatrixInput = new MatrixInput(this, false); //crée une nouvelle fenêtre avec comme paramètre this (la matrice) et un booleen (false qui determine si on modifie ou non la matrice)
@@ -155,15 +127,35 @@ namespace CalMat
         public Matrix Trans() //defini une methode pour la transposer
         {
             Matrix T = new Matrix(this.Lines, this.Columns); //crée une matrice de passage de meme dimension que la matrice this
-            for (int i = 0 ; i < this.Lines ; i++)
+            for (int i = 0; i < this.Lines; i++)
             {
-                for (int j = 0 ; j < this.Columns ; j++) //parcours la matrice T et this
+                for (int j = 0; j < this.Columns; j++) //parcours la matrice T et this
                 {
                     T.Elements[i, j] = this.Elements[j, i]; //defini la transposee de this
                 }
             }
             return T; //retourne la matrice T
         }
+
+        public Matrix Pow(String p) //méthode pour calculer la puissace d'une matrice
+        {
+            int value;
+
+            if (int.TryParse(p, out value)) //on essaye de convertir "p" en int
+            {
+
+                Matrix b = this; //on crée une autre matrice "b" égale à "this"
+                for (int n = 1; n < value; n++)
+                {
+                    b *= this; //si réussi ,multiplie "c" par "b", "p" fois
+                }
+                return b; //retourne b
+
+
+            }
+            throw new Exception("Impossible de convertir '" + p + "' en int dans l'operateur ^ de SquareMatrix.\n"); //si on arrive pas à convertir
+
+        } 
 
         public override string ToString() // méthode pour mettre la matrice sous forme de string
         {
@@ -175,7 +167,7 @@ namespace CalMat
                 for (int i = 0; i < this.Columns; i++) //parcours les colonnes de la matrice this
                 {
                     value += Elements[i, j]; //ajoute la valeurs de la case correspondante
-                    if (i != this.Columns -1) 
+                    if (i != this.Columns - 1)
                     {
                         value += "\t"; //si ce n'est pas la l'avant deriere colonne, on ajoute une tabulation
                     }
